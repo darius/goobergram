@@ -7,7 +7,6 @@ class Variable(constraints.Variable):
     def as_scalar(self):
         assert False
     def __str__(self):
-#        return '<Variable %x (%r %r)>' % (id(self), self.constraints, self.value)
         return '<Variable %x>' % id(self)
     def __neg__(self):         return -(self.as_expression())
     def __add__(self, value):  return self.as_expression() + value
@@ -27,7 +26,6 @@ class Constraint(constraints.Constraint):
         return self.lin_exp.variables()
     def solve(self):
         eqns = [c.lin_exp for c in self.get_connected_constraints()]
-#        print 'solve', eqns
         for variable, value in linear_equations.solve_equations(eqns).items():
             variable.assign(value)
 
@@ -60,15 +58,11 @@ class Expression:
     def __neg__(self):         return self.scale(-1)
     def __add__(self, value):  return self.combine(1, self.coerce(value), 1)
     def __sub__(self, value):  return self.combine(1, self.coerce(value), -1)
-    def __mul__(self, value):
-#        print 'mul', self, value
-        return self.scale(as_scalar(value))
+    def __mul__(self, value):  return self.scale(as_scalar(value))
     def __div__(self, value):  return self.scale(1. / as_scalar(value))
     def __radd__(self, value): return self.coerce(value) + self
     def __rsub__(self, value): return self.coerce(value) - self
-    def __rmul__(self, value):
-#        print 'rmul', value, self
-        return self.scale(as_scalar(value))
+    def __rmul__(self, value): return self.scale(as_scalar(value))
     def __rdiv__(self, value): return self.coerce(value) / self
 
 class Number(Expression):
@@ -81,7 +75,6 @@ class Number(Expression):
     def as_expression(self):
         return self
     def as_scalar(self):
-#        print 'as_scalar', self.lin_exp
         assert self.lin_exp.is_constant()
         return self.lin_exp.constant
     def coerce(self, value):
@@ -113,7 +106,6 @@ class Compound(Expression):
             return Compound(value)
         assert False
     def combine(self, c, e2, c2):
-#        print 'combine', self, c, e2, c2
         return Compound(dict((key, (c * self.mapping[key]
                                     + c2 * e2.mapping[key]))
                              for key in self.mapping.keys()))
@@ -127,8 +119,6 @@ class Compound(Expression):
             return self.mapping[name]
         except KeyError:
             raise AttributeError(name)
-    def __repr__(self):
-        return '<Compound of %s>' % sorted(self.mapping.keys())
     def __str__(self):
         return '<Compound of %s>' % sorted(self.mapping.keys())
 

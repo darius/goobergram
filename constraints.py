@@ -9,7 +9,6 @@ class Variable:
         if self.value is None: self.solve()
         return self.value
     def solve(self):
-#        print 'solve', self.constraints
         assert self.constraints
         list(self.constraints)[0].solve()
     def add_connected_constraints(self, constraints):
