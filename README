@@ -1,0 +1,8 @@
+I wanted to play with Mark-Jason Dominus's marvelous linogram program
+from his book _Higher-Order Perl_:
+http://hop.perl.plover.com/linogram/
+
+But as a Perl tyro I'd rather read it in Python. Since I didn't feel
+like translating the linogram parser and interpreter, here's an
+attempt to provide the core features of constraints, expressions, and
+compound objects as Python objects you can use directly.
