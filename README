@@ -6,3 +6,7 @@ But as a Perl tyro I'd rather read it in Python. Since I didn't feel
 like translating the linogram parser and interpreter, here's an
 attempt to provide the core features of constraints, expressions, and
 compound objects as Python objects you can use directly.
+
+(The name was picked at random -- since this isn't exactly MJD's
+program. Might be better renamed descriptively like py_linogram_core,
+supposing it works out.)
