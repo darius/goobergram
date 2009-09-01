@@ -1,7 +1,7 @@
 import linear_constraints as lc
 
 
-x = lc.Variable()
+x = lc.Number()
 print 'x', x
 #lc.zero(x)
 lc.zero(x - 3)

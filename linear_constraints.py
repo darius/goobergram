@@ -2,20 +2,8 @@ import constraints
 import linear_equations
 
 class Variable(constraints.Variable):
-    def as_expression(self):
-        return Number(linear_equations.LinExp(0, [(self, 1)]))
-    def as_scalar(self):
-        assert False
     def __str__(self):
         return '<Variable %x>' % id(self)
-    def __neg__(self):         return -(self.as_expression())
-    def __add__(self, value):  return self.as_expression() + value
-    def __sub__(self, value):  return self.as_expression() - value
-    def __mul__(self, value):  return self.as_expression() * value
-    def __div__(self, value):  return self.as_expression() / value
-    def __radd__(self, value): return value + self.as_expression()
-    def __rsub__(self, value): return value - self.as_expression()
-    def __rmul__(self, value): return value * self.as_expression()
 
 class Constraint(constraints.Constraint):
     def __init__(self, lin_exp):
