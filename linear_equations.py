@@ -1,4 +1,4 @@
-class LinExp:
+class LinExp(object):
     "A linear expression in some variables."
     def __init__(self, constant, terms):
         self.constant = constant

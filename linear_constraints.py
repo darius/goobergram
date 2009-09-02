@@ -33,7 +33,7 @@ def as_scalar(value):
         return value
     return value.as_scalar()
 
-class Expression:
+class Expression(object):
     def as_constraints(self):
         abstract
     def as_expression(self):

@@ -1,4 +1,4 @@
-class Variable:
+class Variable(object):
     def __init__(self):
         self.constraints = set()
         self.value = None
@@ -18,7 +18,7 @@ class Variable:
         assert self.value is None or self.value == value
         self.value = value
 
-class Constraint:
+class Constraint(object):
     def solve(self):
         abstract
     def get_variables(self):
