@@ -17,6 +17,9 @@ class Constraint(constraints.Constraint):
         for variable, value in linear_equations.solve_equations(eqns).items():
             variable.assign(value)
 
+def equate(expr1, expr2):
+    zero(as_expression(expr1) - expr2)
+
 def zero(value):
     as_expression(value).as_constraints()
 
@@ -81,6 +84,8 @@ class Number(Expression):
 class Compound(Expression):
     def __init__(self, mapping):
         self.mapping = mapping
+    def add_parts(self, dict):
+        self.mapping.update(dict)
     def as_constraints(self):
         return flatten(e.as_constraints() for e in self.mapping.values())
     def as_expression(self):
@@ -102,6 +107,8 @@ class Compound(Expression):
                              for key in self.mapping.keys()))
     def keys(self):
         return set(self.mapping.keys())
+    def get_parts(self):
+        return self.mapping.itervalues()
     def __getattr__(self, name):
         try:
             return self.mapping[name]
