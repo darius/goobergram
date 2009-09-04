@@ -98,6 +98,7 @@ equate(l1.end.y, (l1.start.y + 10))
 equate(l1.start, dict(x=3, y=4))
 l1.draw()
 
+print
 l2 = HLine()
 l2.draw()                       # XXX should raise an error
 equate(l2.y, 42)
@@ -109,4 +110,4 @@ print
 lb = LabelBox('Aloha')
 equate(lb.top, l2)
 equate(lb.ht, 100)
-lb.draw()                       # XXX I think the output is wrong -- checkme
+lb.draw()
