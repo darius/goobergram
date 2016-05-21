@@ -6,7 +6,8 @@ We support compound values, too: they have named fields, and they do
 arithmetic by operating on corresponding field values recursively.  We
 require them all to match; actual Linogram is more lenient.
 (Implementing this leniency would just take intersecting the key-sets,
-I *think*, but I don't feel so solid in my understanding.
+I *think*, but I don't feel so solid in my understanding. See
+HOP p. 525.)
 """
 
 import constraints
