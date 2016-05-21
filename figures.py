@@ -22,9 +22,13 @@ class Label(Point):
         super(Label, self).__init__()
         self.text = text
     def draw(self):
-        print 'label %g %g %r' % (self.x.get_value(),
-                                  self.y.get_value(),
-                                  self.text)
+        if any(v.get_value() is None
+               for v in [self.x, self.y]):
+            print '// undetermined Label'
+        else:
+            print 'ctx.fillText(%r, %g, %g' % (self.text,
+                                               self.x.get_value(),
+                                               self.y.get_value())
 
 class Line(Figure):
     def __init__(self):
@@ -35,9 +39,15 @@ class Line(Figure):
         self.add_parts(nonself(locals()))
         equate(center, (start + end) / 2)
     def draw(self):
-        coords = [self.start.x, self.start.y,
-                  self.end.x, self.end.y]
-        print 'draw %s %s %s %s' % tuple(c.get_value() for c in coords)
+        if any(v.get_value() is None
+               for v in [self.start.x, self.start.y,
+                         self.end.x, self.end.y]):
+            print '// undetermined Line'
+        else:
+            print 'ctx.moveTo(%g, %g)' % (self.start.x.get_value(),
+                                          self.start.y.get_value())
+            print 'ctx.lineTo(%g, %g)' % (self.end.x.get_value(),
+                                          self.end.y.get_value())
 
 class HLine(Line):
     def __init__(self):
@@ -111,3 +121,19 @@ lb = LabelBox('Aloha')
 equate(lb.top, l2)
 equate(lb.ht, 100)
 lb.draw()
+#. ctx.moveTo(3, 4)
+#. ctx.lineTo(5, 14)
+#. 
+#. // undetermined Line
+#. ctx.moveTo(1, 42)
+#. ctx.lineTo(11, 42)
+#. 
+#. ctx.moveTo(1, 142)
+#. ctx.lineTo(11, 142)
+#. ctx.moveTo(1, 42)
+#. ctx.lineTo(11, 42)
+#. ctx.moveTo(11, 42)
+#. ctx.lineTo(11, 142)
+#. ctx.fillText('Aloha', 6, 92
+#. ctx.moveTo(1, 42)
+#. ctx.lineTo(1, 142)
