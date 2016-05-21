@@ -118,7 +118,4 @@ class Compound(Expression):
         return '<Compound of %s>' % sorted(self.mapping.keys())
 
 def flatten(lists):
-    rv = []
-    for list in lists:
-        rv.extend(list)
-    return rv
+    return sum(lists, [])
