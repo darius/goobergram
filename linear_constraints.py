@@ -8,6 +8,11 @@ require them all to match; actual Linogram is more lenient.
 (Implementing this leniency would just take intersecting the key-sets,
 I *think*, but I don't feel so solid in my understanding. See
 HOP p. 525.)
+
+Completely missing: Linogram supports arithmetic between a 'feature'
+(our Expression) and a tuple (an (x,y) or (x,y,z) Compound, effectively).
+This automatically maps down the structure of the feature until it reaches
+fields named like .x or .y. (HOP p. 526)
 """
 
 import constraints
