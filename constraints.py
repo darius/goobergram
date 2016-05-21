@@ -1,3 +1,8 @@
+"""
+A variable may have a value; a constraint enforces a relation
+between variables. Variables and constraints form a network.
+"""
+
 class Variable(object):
     def __init__(self):
         self.constraints = set()

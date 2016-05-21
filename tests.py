@@ -1,3 +1,7 @@
+"""
+Smoke test for linear_constraints.
+"""
+
 import linear_constraints as lc
 
 

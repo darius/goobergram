@@ -1,3 +1,7 @@
+"""
+Basic example figures, for testing.
+"""
+
 from linear_constraints import Number, Compound, equate
 
 def nonself(d):

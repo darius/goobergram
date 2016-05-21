@@ -1,3 +1,10 @@
+"""
+A linear constraint requires a linear combination of variables to = 0.
+
+We support compound values, too: they have named fields, and they
+do arithmetic by operating on corresponding field values recursively.
+"""
+
 import constraints
 import linear_equations
 

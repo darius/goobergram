@@ -1,3 +1,7 @@
+"""
+Solve sparse systems of linear equations.
+"""
+
 class LinExp(object):
     "A linear expression in some variables."
     def __init__(self, constant, terms):
