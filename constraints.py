@@ -10,7 +10,7 @@ class Variable(object):
         return self.value
     def solve(self):
         assert self.constraints
-        list(self.constraints)[0].solve()
+        next(iter(self.constraints)).solve() # XXX solve them all?
     def add_connected_constraints(self, constraints):
         for constraint in self.constraints:
             constraint.add_connected_constraints(constraints)
