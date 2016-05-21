@@ -2,8 +2,11 @@
 A linear constraint requires a linear combination of variables to = 0.
 We represent the constraint as a linear expression, with the '=0' implicit.
 
-We support compound values, too: they have named fields, and they
-do arithmetic by operating on corresponding field values recursively.
+We support compound values, too: they have named fields, and they do
+arithmetic by operating on corresponding field values recursively.  We
+require them all to match; actual Linogram is more lenient.
+(Implementing this leniency would just take intersecting the key-sets,
+I *think*, but I don't feel so solid in my understanding.
 """
 
 import constraints
