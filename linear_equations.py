@@ -15,11 +15,9 @@ class LinExp(object):
     def coefficient(self, variable):
         return self.terms.get(variable, 0)
     def variables(self):
-        return set(self.terms.keys())
+        return set(self.terms.iterkeys())
     def a_variable(self):
-        for var in self.terms:
-            return var
-        return None
+        return next(self.terms.iterkeys(), None)
     def is_constant(self):
         return not self.terms
     # The remaining methods treat LinExps as equations implicitly ==
