@@ -2,6 +2,8 @@
 Solve sparse systems of linear equations.
 """
 
+from __future__ import division
+
 class LinExp(object):
     "A linear expression in some variables."
     def __init__(self, constant, terms):
@@ -34,20 +36,19 @@ class LinExp(object):
         return self.is_constant() and self.constant == 0
     def defines_var(self):
         vars = self.terms.keys()
-        if len(vars) == 1 and self.coefficient(vars[0]) == 1:
-            return vars
-        return ()
+        return (vars if len(vars) == 1 and self.coefficient(vars[0]) == 1
+                else ())
     def substitute_for(self, var, eq):
         """Return an equivalent equation with var eliminated by
         resolving against eq (which must have a term for var)."""
         # self - (self[var]/eq[var]) * eq
-        c = -self.coefficient(var) / float(eq.coefficient(var))
+        c = -self.coefficient(var) / eq.coefficient(var)
         return self.combine(1, eq, c)
     def normalize(self):
         """Return an equivalent equation with a variable's coefficient
         rescaled to 1."""
         var = self.a_variable()
-        return self.scale(1. / self.coefficient(var))
+        return self.scale(1 / self.coefficient(var))
     def __repr__(self):
         items = sorted(self.terms.items())
         if self.constant:
