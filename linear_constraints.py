@@ -94,7 +94,7 @@ class Number(Expression):
     def scale(self, c):
         return Number(self.lin_exp.scale(c))
     def get_value(self):
-        return self.lin_exp.defines_var().get_value()
+        return self.lin_exp.defines_var()[0].get_value()
     def __str__(self):
         return '<Number %r>' % self.lin_exp
 
@@ -116,12 +116,12 @@ class Compound(Expression):
             return Compound(value)
         assert False
     def combine(self, c, e2, c2):
-        return Compound(dict((key, (c * self.mapping[key]
-                                    + c2 * e2.mapping[key]))
-                             for key in self.mapping.keys()))
+        return Compound({key: (c * self.mapping[key]
+                               + c2 * e2.mapping[key])
+                         for key in self.mapping.keys()})
     def scale(self, c):
-        return Compound(dict((key, c * self.mapping[key])
-                             for key in self.mapping.keys()))
+        return Compound({key: c * self.mapping[key]
+                         for key in self.mapping.keys()})
     def keys(self):
         return set(self.mapping.keys())
     def get_parts(self):

@@ -6,7 +6,7 @@ class LinExp(object):
     "A linear expression in some variables."
     def __init__(self, constant, terms):
         self.constant = constant
-        self.terms = dict((var, val) for var, val in terms if val != 0)
+        self.terms = {var: val for var, val in terms if val != 0}
     def combine(self, c, e2, c2):
         return LinExp(c * self.constant + c2 * e2.constant,
                       ((var, (c * self.coefficient(var)
@@ -35,8 +35,8 @@ class LinExp(object):
     def defines_var(self):
         vars = self.terms.keys()
         if len(vars) == 1 and self.coefficient(vars[0]) == 1:
-            return vars[0]
-        return None
+            return vars
+        return ()
     def substitute_for(self, var, eq):
         """Return an equivalent equation with var eliminated by
         resolving against eq (which must have a term for var)."""
@@ -73,12 +73,9 @@ def solve_equations(eqs):
     consistent, eqs = reduce_equations(eqs)
     if not consistent:
         return {}               # or None, or what?
-    def solutions():
-        for le in eqs:
-            var = le.defines_var()
-            if var:
-                yield var, -le.constant
-    return dict(solutions())
+    return {var: -le.constant
+            for le in eqs
+            for var in le.defines_var()}
 
 def reduce_equations(eqs):
     """Try to reduce eqs to an equivalent system with each variable
