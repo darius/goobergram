@@ -25,14 +25,10 @@ class BC(Constraint):
         return t in self.values
 
 def solve(bcs):
-    vars = set()
-    for bc in bcs:
-        vars |= set(bc.variables)
+    vars = set().union(*[set(bc.variables) for bc in bcs])
     for asgn in assignments(sorted(vars)):
-        for bc in bcs:
-            if not bc.allows(asgn):
-                continue
-        return asgn.items()
+        if all(bc.allows(asgn)):
+            return asgn.items()
     return ()
 
 def assignments(vars):
