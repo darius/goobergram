@@ -17,15 +17,17 @@ Draw         = Struct('Draw', 'drawables')
 DrawFunction = Struct('DrawFunction', 'fn_name')
 DrawName     = Struct('DrawName', 'name')
 
-Add = Struct('+', 'arg1 arg2')
-Sub = Struct('-', 'arg1 arg2')
-Mul = Struct('*', 'arg1 arg2')
-Div = Struct('/', 'arg1 arg2')
+Add    = Struct('+', 'arg1 arg2')
+Sub    = Struct('-', 'arg1 arg2')
+Mul    = Struct('*', 'arg1 arg2')
+Div    = Struct('/', 'arg1 arg2')
+Negate = lambda expr: Sub(Number(0), expr)
 
 Tuple  = Struct('Tuple', 'exprs')
+
 Name   = Struct('Name', 'id')
 Dot    = Struct('Dot', 'base field')
-Negate = Struct('Negate', 'expr')
+
 Number = Struct('Number', 'value')
 
 def maybe(*args):
