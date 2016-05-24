@@ -9,15 +9,11 @@ which is copyright by Mark Jason Dominus.
 from parson import Grammar
 import absyntax
 
-def maybe(*args):
-    assert len(args) <= 1
-    return args[0] if args else None
-
 grammar = Grammar(r"""
 program: _ (definition | declaration)* ('__END__' | !/./).
 
 definition: defheader '{'_ [declaration* :hug] '}'_   :Definition.
-defheader: 'define'__ ID [('extends'__ ID)? :maybe].
+defheader: 'define'__ ID ['extends'__ ID | :none].
 
 declaration: ID declarators ';'_   :VarDecl
            | constraint_section
@@ -63,4 +59,5 @@ __       = /\b/_.   # (i.e. a keyword must match up to a word boundary)
 
 _        = /\s*/.
 """)
-parser = grammar(maybe=maybe, **absyntax.__dict__)
+parser = grammar(none=lambda: None,
+                 **absyntax.__dict__)
