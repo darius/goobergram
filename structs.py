@@ -3,29 +3,34 @@ Define a named-tuple-like type, but simpler.
 """
 
 # TODO figure out how to use __slots__
-# TODO use self.__class__.__name__ by default
 
-def Struct(my_name, field_names, supertype=(object,)):
+def Struct(field_names, name=None, supertype=(object,)):
     if isinstance(field_names, (str, unicode)):
         field_names = tuple(field_names.split())
+
+    if name is None:
+        name = 'Struct<%s>' % ','.join(field_names)
+        def get_name(self): return self.__class__.__name__
+    else:
+        def get_name(self): return name
 
     def __init__(self, *args):
         if len(field_names) != len(args):
 	    raise TypeError("%s takes %d arguments (%d given)"
-                            % (my_name, len(field_names), len(args)))
+                            % (get_name(self), len(field_names), len(args)))
         self.__dict__.update(zip(field_names, args))
 
     def __repr__(self):
-        return '%s(%s)' % (my_name, ', '.join(repr(getattr(self, f))
-                                              for f in field_names))
+        return '%s(%s)' % (get_name(self), ', '.join(repr(getattr(self, f))
+                                                     for f in field_names))
 
     # (for use with pprint)
     def my_as_sexpr(self):         # XXX better name?
-        return (my_name,) + tuple(as_sexpr(getattr(self, f))
-                                  for f in field_names)
+        return (get_name(self),) + tuple(as_sexpr(getattr(self, f))
+                                         for f in field_names)
     my_as_sexpr.__name__ = 'as_sexpr'
 
-    return type(my_name,
+    return type(name,
                 supertype,
                 dict(__init__=__init__,
                      __repr__=__repr__,
