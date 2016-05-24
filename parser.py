@@ -19,13 +19,11 @@ program: _ (definition | declaration)* ('__END__' | !/./).
 definition: defheader '{'_ [declaration* :hug] '}'_   :Definition.
 defheader: 'define'__ ID [('extends'__ ID)? :maybe].
 
-declaration: type declarators ';'_   :TypeDecl
+declaration: ID declarators ';'_   :VarDecl
            | constraint_section
            | draw_section.
+
 declarators: declarator (','_ declarator)*   :hug.
-
-type: ID.
-
 declarator: ID [('('_ params ')'_)? :maybe]   :Declarator.
 params = param_spec (','_ param_spec)*.
 param_spec: ID '='_ expression.
