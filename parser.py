@@ -13,7 +13,7 @@ grammar = Grammar(r"""
 program: _ (definition | declaration)* ('__END__' | !/./).
 
 definition: defheader '{'_ [declaration* :hug] '}'_   :Definition.
-defheader: 'define'__ ID ['extends'__ ID | :none].
+defheader: 'define'__ ID ['extends'__ ID | :None].
 
 declaration: ID declarators ';'_   :VarDecl
            | constraint_section
@@ -59,5 +59,4 @@ __       = /\b/_.   # (i.e. a keyword must match up to a word boundary)
 
 _        = /\s*/.
 """)
-parser = grammar(none=lambda: None,
-                 **absyntax.__dict__)
+parser = grammar(**absyntax.__dict__)
