@@ -1,5 +1,8 @@
 """
-Parse (our subset of) Linogram source code.
+Parse Linogram source code. I think the only syntax omitted
+from HOP is the optional Perl code at the end of a source 
+file (but I'm writing this comment a while after the code).
+The full Perl Linogram has more features.
 
 The grammar is a direct port of the one in Higher Order Perl,
 which is copyright by Mark Jason Dominus.
