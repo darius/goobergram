@@ -29,7 +29,7 @@ params = param_spec (','_ param_spec)*.
 param_spec: ID '='_ expression.
 
 constraint_section: 'constraints'__ '{'_ constraint* '}'_   :hug :Constraints.
-constraint: expression '='_ expression ';'_.
+constraint: expression '='_ expression ';'_ :hug.
 
 draw_section: 'draw'__ '{'_ drawable* '}'_   :hug :Draw.
 drawable: name ';'_      :DrawName
