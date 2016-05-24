@@ -16,7 +16,7 @@ def maybe(*args):
     return args[0] if args else None
 
 grammar = Grammar(r"""
-program: _ (definition | declaration)* !/./.
+program: _ (definition | declaration)* ('__END__' | !/./).
 
 definition: defheader '{'_ [declaration* :hug] '}'_   :Definition.
 defheader: 'define'__ ID [('extends'__ ID)? :maybe].
