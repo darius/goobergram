@@ -24,7 +24,7 @@ declaration: ID declarators ';'_   :VarDecl
            | draw_section.
 
 declarators: declarator (','_ declarator)*   :hug.
-declarator: ID [('('_ params ')'_)? :maybe]   :Declarator.
+declarator: ID [('('_ params ')'_)? :hug]   :Declarator.
 params = param_spec (','_ param_spec)*.
 param_spec: ID '='_ expression.
 
