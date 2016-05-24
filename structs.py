@@ -3,6 +3,7 @@ Define a named-tuple-like type, but simpler.
 """
 
 # TODO figure out how to use __slots__
+# TODO use self.__class__.__name__ by default
 
 def Struct(my_name, field_names, supertype=(object,)):
     if isinstance(field_names, (str, unicode)):
