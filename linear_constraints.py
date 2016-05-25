@@ -63,6 +63,11 @@ class Expression(object):
         abstract
     def scale(self, c):
         abstract
+    def __xor__(self, other):
+        "Constrain me to equal other. (A giant abuse of notation.)"
+        other = as_expression(other)
+        equate(self, other)
+        return other
     def __neg__(self):         return self.scale(-1)
     def __add__(self, value):  return self.combine(1, self.coerce(value), 1)
     def __sub__(self, value):  return self.combine(1, self.coerce(value), -1)

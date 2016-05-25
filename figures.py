@@ -4,22 +4,24 @@ Basic example figures, for testing.
 
 from linear_constraints import Number, Compound, equate
 
-def nonself(d):
-    return dict((k, v) for k, v in d.items() if k != 'self')
-
 class Figure(Compound):
     def __init__(self):
         super(Figure, self).__init__({})
+    def add_parts(self, dict):
+        super(Figure, self).add_parts(nonself(dict))
     def draw(self):
         for part in self.get_parts():
             if hasattr(part, 'draw'):
                 part.draw()
 
+def nonself(d):
+    return {k: v for k, v in d.iteritems() if k != 'self'}
+
 class Point(Figure):
     def __init__(self):
         super(Point, self).__init__()
         x, y = Number(), Number()
-        self.add_parts(nonself(locals()))
+        self.add_parts(locals())
 
 class Label(Point):
     def __init__(self, text):
@@ -40,8 +42,8 @@ class Line(Figure):
         start = Point()
         end = Point()
         center = Point()
-        self.add_parts(nonself(locals()))
-        equate(center, (start + end) / 2)
+        self.add_parts(locals())
+        center ^ (start + end) / 2
     def draw(self):
         if any(v.get_value() is None
                for v in [self.start.x, self.start.y,
@@ -57,73 +59,73 @@ class HLine(Line):
     def __init__(self):
         super(HLine, self).__init__()
         y, length = Number(), Number()
-        self.add_parts(nonself(locals()))
-        equate(self.start.y, y)
-        equate(self.end.y, y)
-        equate(self.start.x + length, self.end.x)
+        self.add_parts(locals())
+        self.start.y ^ y
+        self.end.y   ^ y
+        self.start.x + length ^ self.end.x
 
 class VLine(Line):
     def __init__(self):
         super(VLine, self).__init__()
         x, length = Number(), Number()
-        self.add_parts(nonself(locals()))
-        equate(self.start.x, x)
-        equate(self.end.x, x)
-        equate(self.start.y + length, self.end.y)
+        self.add_parts(locals())
+        self.start.x ^ x
+        self.end.x   ^ x
+        self.start.y + length ^ self.end.y
 
 class Box(Figure):
     def __init__(self):
         super(Box, self).__init__()
         left, right = VLine(), VLine()
         top, bottom = HLine(), HLine()
-        nw, n, ne, e, se, s, sw, w, c = map(lambda i: Point(), range(9))
+        nw, n, ne, e, se, s, sw, w, c = tuple(Point() for _ in range(9))
         ht, wd = Number(), Number()
-        self.add_parts(nonself(locals()))
+        self.add_parts(locals())
 
-        equate(nw, left.start)
-        equate(nw, top.start)
-        equate(ne, right.start)
-        equate(ne, top.end)
-        equate(sw, left.end)
-        equate(sw, bottom.start)
-        equate(se, right.end)
-        equate(se, bottom.end)
+        nw ^ left.start
+        nw ^ top.start
+        ne ^ right.start
+        ne ^ top.end
+        sw ^ left.end
+        sw ^ bottom.start
+        se ^ right.end
+        se ^ bottom.end
 
-        equate(n, (nw + ne) / 2)
-        equate(s, (sw + se) / 2)
-        equate(w, (nw + sw) / 2)
-        equate(e, (ne + se) / 2)
+        n ^ (nw + ne) / 2
+        s ^ (sw + se) / 2
+        w ^ (nw + sw) / 2
+        e ^ (ne + se) / 2
 
-        equate(c, (n + s) / 2)
+        c ^ (n + s) / 2
 
-        equate(ht, left.length)
-        equate(wd, top.length)
+        ht ^ left.length
+        wd ^ top.length
 
 class LabelBox(Box):
     def __init__(self, text):
         super(LabelBox, self).__init__()
         label = Label(text)
-        self.add_parts(nonself(locals()))
-        equate(label, self.c) # XXX does this work?
+        self.add_parts(locals())
+        label ^ self.c # XXX does this work?
 
 l1 = Line()
-equate(l1.end.x, 5)
-equate(l1.end.y, (l1.start.y + 10))
-equate(l1.start, dict(x=3, y=4))
+l1.end.x ^ 5
+l1.end.y ^ (l1.start.y + 10)
+l1.start ^ Compound(dict(x=3, y=4))
 l1.draw()
 
 print
 l2 = HLine()
 l2.draw()                       # XXX should raise an error
-equate(l2.y, 42)
-equate(l2.length, 10)
-equate(l2.start.x, 1)
+l2.y ^ 42
+l2.length ^ 10
+l2.start.x ^ 1
 l2.draw()
 
 print
 lb = LabelBox('Aloha')
-equate(lb.top, l2)
-equate(lb.ht, 100)
+lb.top ^ l2
+lb.ht ^ 100
 lb.draw()
 #. ctx.moveTo(3, 4)
 #. ctx.lineTo(5, 14)
