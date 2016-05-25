@@ -2,6 +2,8 @@
 Abstract syntax and its interpreter.
 """
 
+import operator
+
 from structs import Struct
 import linear_constraints as LC
 
@@ -40,7 +42,6 @@ class Instance(LC.Compound):
         LC.Compound.__init__(self, {})
         self.type = type_
     def draw(self):
-        print 'drawing', self
         self.type.draw(self)
     def __repr__(self):
         return '<instance of %r: %r>' % (self.type, sorted(self.keys()))
@@ -89,23 +90,27 @@ class DrawName(Struct('name')):
     def draw(self, inst, env):
         self.name.evaluate(inst, env).draw()
 
-class Add(Struct('arg1 arg2')):
-    def evaluate(self, inst, env):
-        return self.arg1.evaluate(inst, env) + self.arg2.evaluate(inst, env)
 
-class Sub(Struct('arg1 arg2')):
+class BinaryOp(Struct('arg1 arg2')):
     def evaluate(self, inst, env):
-        return self.arg1.evaluate(inst, env) - self.arg2.evaluate(inst, env)
+        return self.operate(self.arg1.evaluate(inst, env),
+                            self.arg2.evaluate(inst, env))
 
-class Mul(Struct('arg1 arg2')):
-    def evaluate(self, inst, env):
-        return self.arg1.evaluate(inst, env) * self.arg2.evaluate(inst, env)
+class Add(BinaryOp):
+    operate = operator.add
 
-class Div(Struct('arg1 arg2')):
-    def evaluate(self, inst, env):
-        return self.arg1.evaluate(inst, env) / self.arg2.evaluate(inst, env)
+class Sub(BinaryOp):
+    operate = operator.sub
 
-Negate = lambda expr: Sub(Number(0), expr)
+class Mul(BinaryOp):
+    operate = operator.mul
+
+class Div(BinaryOp):
+    operate = operator.div
+
+def Negate(expr):
+    return Sub(Number(0), expr)
+
 
 class Tuple(Struct('exprs')):
     def evaluate(self, inst, env):
