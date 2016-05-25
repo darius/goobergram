@@ -7,16 +7,19 @@ import linear_constraints as LC
 
 def run(program):
     env = {'number': NumberType()}
-    inst = Instance(None)
-    for stmt in program:
-        stmt.build(inst, env)
-    inst.draw()
+    type_ = Type(Definition('<program>', None, program),
+                 env)
+    inst = type_.instantiate(env, ())
+    for part in inst.get_parts():
+        part.draw()
 
 
 class NumberType(object):
     def instantiate(self, env, params):
         assert not params
-        return LC.Number()      # TODO give it a name and a fake defn?
+        return LC.Number()      # TODO give it a name and a type?
+    def draw(self, inst):       # XXX never called because LC.Number doesn't point back to the type
+        pass
 
 class Type(Struct('defn env')):
     def instantiate(self, env, params):
@@ -35,13 +38,9 @@ class Instance(LC.Compound):
         LC.Compound.__init__(self, {})
         self.type = type_
     def draw(self):
-        if self.type is None:
-            for v in self.mapping.values():
-                v.draw()
-        else:
-            self.type.draw(self)
+        self.type.draw(self)
     def __repr__(self):
-        return '<instance of %r: %r>' % (self.type, sorted(self.mapping.keys()))
+        return '<instance of %r: %r>' % (self.type, sorted(self.keys()))
 
 
 class Definition(Struct('id extends decls')):
@@ -130,4 +129,8 @@ tuple_types = {} # XXX
 def draw_foo(mapping):          # XXX just for the smoke test
     print 'draw foo', mapping['a'].get_value(), mapping['b'].get_value()
 
-draw_functions = dict(draw_foo=draw_foo)
+def draw_point(mapping):          # XXX just for the smoke test
+    print 'draw point', mapping['x'].get_value(), mapping['y'].get_value()
+
+draw_functions = dict(draw_foo=draw_foo,
+                      draw_point=draw_point)
