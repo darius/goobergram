@@ -2,7 +2,7 @@
 Basic example figures, for testing.
 """
 
-from linear_constraints import Number, Compound, equate
+from linear_constraints import Number, Compound
 
 class Figure(Compound):
     def __init__(self):
