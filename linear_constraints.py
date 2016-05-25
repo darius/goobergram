@@ -119,7 +119,7 @@ class Compound(Expression):
             return value
         if isinstance(value, dict) and self.keys() == set(value.keys()):
             return Compound(value)
-        assert False
+        assert False, "Not a Compound: %r" % (value,)
     def combine(self, c, e2, c2):
         return Compound({key: (c * self.mapping[key]
                                + c2 * e2.mapping[key])

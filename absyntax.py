@@ -27,7 +27,7 @@ class NumberInstance(LC.Number):
 
 class Type(Struct('defn env')):
     def instantiate(self, env, params):
-        inst = Instance(self) # XXX use self.defn.extends if present
+        inst = Instance(self)
         self.defn.populate(inst, env)
         for id, expr in params:
             assert False, 'XXX'
@@ -36,6 +36,20 @@ class Type(Struct('defn env')):
         self.defn.draw(inst, self.env)
     def __repr__(self):
         return '<type %s>' % self.defn.id
+
+class TupleType(Struct('fields')):
+    def instantiate(self, env, params):
+        inst = Instance(self)
+        for f in self.fields:
+            inst.mapping[f] = NumberInstance()
+        for f, expr in params:
+            LC.equate(inst.mapping[f], expr.evaluate(None, # XXX
+                                                     env))
+        return inst
+    def draw(self, inst):
+        pass
+    def __repr__(self):
+        return '<tuple-type %s>' % ','.join(self.fields)
 
 class Instance(LC.Compound):
     def __init__(self, type_):
@@ -51,11 +65,24 @@ class Definition(Struct('id extends decls')):
     def build(self, inst, env):
         env[self.id] = Type(self, env)
     def populate(self, inst, env):
+        supe = self.super_definition(env)
+        if supe:
+            supe.populate(inst, env)  # XXX right env?
         for decl in self.decls:
             decl.build(inst, env)
     def draw(self, inst, env):
+        supe = self.super_definition(env)
+        if supe:
+            supe.draw(inst, env) # XXX does the user always want this?
         for decl in self.decls:
             decl.draw(inst, env)
+    def super_definition(self, env): # XXX use env from defn time, I guess
+        if self.extends:
+            supertype = env[self.extends]
+            assert isinstance(supertype, Type), "%r is not a type" % supertype
+            return supertype.defn
+        else:
+            return None
 
 class VarDecl(Struct('type_id decls')):
     def build(self, inst, env):
@@ -132,13 +159,22 @@ class Number(Struct('value')):
     def evaluate(self, inst, env):
         return self.value
 
-tuple_types = {} # XXX
+tuple_types = {
+    2: TupleType('xy'),
+}
 
-def draw_foo(a, b):          # XXX just for the smoke test
+# XXX just for the smoke test:
+
+def draw_foo(a, b):     
     print 'draw foo', a.get_value(), b.get_value()
 
-def draw_point(x, y):          # XXX just for the smoke test
+def draw_point(x, y):
     print 'draw point', x.get_value(), y.get_value()
 
+def draw_line(start, end, **kwargs):
+    print 'draw line', ((start.x.get_value(), start.y.get_value()),
+                        (end.x.get_value(),   end.y.get_value()))
+
 draw_functions = dict(draw_foo=draw_foo,
-                      draw_point=draw_point)
+                      draw_point=draw_point,
+                      draw_line=draw_line,)

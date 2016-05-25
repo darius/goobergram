@@ -14,7 +14,7 @@ class Variable(object):
         if self.value is None: self.solve()
         return self.value
     def solve(self):
-        assert self.constraints
+        assert self.constraints, "Unconstrained: %r" % self
         next(iter(self.constraints)).solve() # XXX solve them all?
     def add_connected_constraints(self, constraints):
         for constraint in self.constraints:
