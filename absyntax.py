@@ -80,7 +80,7 @@ class Draw(Struct('drawables')):
 
 class DrawFunction(Struct('fn_name')):
     def draw(self, inst, env):
-        draw_functions[self.fn_name](inst.mapping)
+        draw_functions[self.fn_name](**inst.mapping)
 
 class DrawName(Struct('name')):
     def draw(self, inst, env):
@@ -126,11 +126,11 @@ class Number(Struct('value')):
 
 tuple_types = {} # XXX
 
-def draw_foo(mapping):          # XXX just for the smoke test
-    print 'draw foo', mapping['a'].get_value(), mapping['b'].get_value()
+def draw_foo(a, b):          # XXX just for the smoke test
+    print 'draw foo', a.get_value(), b.get_value()
 
-def draw_point(mapping):          # XXX just for the smoke test
-    print 'draw point', mapping['x'].get_value(), mapping['y'].get_value()
+def draw_point(x, y):          # XXX just for the smoke test
+    print 'draw point', x.get_value(), y.get_value()
 
 draw_functions = dict(draw_foo=draw_foo,
                       draw_point=draw_point)
