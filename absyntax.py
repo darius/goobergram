@@ -17,8 +17,10 @@ def run(program):
 class NumberType(object):
     def instantiate(self, env, params):
         assert not params
-        return LC.Number()      # TODO give it a name and a type?
-    def draw(self, inst):       # XXX never called because LC.Number doesn't point back to the type
+        return NumberInstance()
+
+class NumberInstance(LC.Number):
+    def draw(self):
         pass
 
 class Type(Struct('defn env')):
@@ -38,6 +40,7 @@ class Instance(LC.Compound):
         LC.Compound.__init__(self, {})
         self.type = type_
     def draw(self):
+        print 'drawing', self
         self.type.draw(self)
     def __repr__(self):
         return '<instance of %r: %r>' % (self.type, sorted(self.keys()))
