@@ -6,7 +6,7 @@ The grammar is a direct port of the one in Higher Order Perl,
 which is copyright by Mark Jason Dominus.
 """
 
-from parson import Grammar
+from parson import Grammar, Unparsable
 import absyntax
 
 grammar = Grammar(r"""
@@ -60,3 +60,4 @@ __       = /\b/_.   # (i.e. a keyword must match up to a word boundary)
 _        = /\s*/.
 """)
 parser = grammar(**absyntax.__dict__)
+parse = parser.program
