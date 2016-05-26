@@ -131,17 +131,10 @@ class BinaryOp(Struct('arg1 arg2')):
         return self.operate(self.arg1.evaluate(env),
                             self.arg2.evaluate(env))
 
-class Add(BinaryOp):
-    operate = operator.add
-
-class Sub(BinaryOp):
-    operate = operator.sub
-
-class Mul(BinaryOp):
-    operate = operator.mul
-
-class Div(BinaryOp):
-    operate = operator.div
+class Add(BinaryOp): operate = operator.add
+class Sub(BinaryOp): operate = operator.sub
+class Mul(BinaryOp): operate = operator.mul
+class Div(BinaryOp): operate = operator.div
 
 def Negate(expr):
     return Sub(Number(0), expr)
