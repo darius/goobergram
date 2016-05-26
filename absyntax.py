@@ -19,6 +19,13 @@ def run(program):
 class Environment(Struct('types inst')):
     def spawn(self, inst):
         return Environment(self.types, inst)
+    def init(self, id, value):
+        assert id not in self.inst.mapping, "Multiple def: %s" % id
+        self.inst.mapping[id] = value
+    def fetch(self, id):
+        assert id in self.inst.mapping, \
+            "Not found: %r in %r" % (id, self.inst)
+        return self.inst.mapping[id]
 
 class NumberType(object):
     def instantiate(self, env, params):
@@ -89,7 +96,7 @@ class VarDecl(Struct('type_id decls')):
     def build(self, env):
         type_ = env.types[self.type_id]
         for decl in self.decls:
-            env.inst.mapping[decl.id] = type_.instantiate(env, decl.params)
+            env.init(decl.id, type_.instantiate(env, decl.params))
     def draw(self, env):
         pass
 
@@ -153,9 +160,7 @@ tuple_types = {
 
 class Name(Struct('id')):
     def evaluate(self, env):
-        if self.id not in env.inst.mapping:
-            assert 0, "not found: %r in %r" % (self.id, env.inst)
-        return env.inst.mapping[self.id]
+        return env.fetch(self.id)
 
 class Dot(Struct('base field')):
     def evaluate(self, env):
