@@ -20,10 +20,10 @@ def main(argv):
 
 def syntax_error(e, filename):
     line_no, prefix, suffix = where(e)
-    print "%s:%d:%d: Syntax error" % (filename, line_no, len(prefix))
     prefix, suffix = sanitize(prefix), sanitize(suffix)
-    print '  ', prefix + suffix
-    print '  ', ' '*len(prefix) + '^'
+    sys.stderr.write("%s:%d:%d: Syntax error\n" % (filename, line_no, len(prefix)))
+    sys.stderr.write('  ' + prefix + suffix + '\n')
+    sys.stderr.write('  ' + ' '*len(prefix) + '^\n')
 
 def where(e):
     before, after = e.failure
