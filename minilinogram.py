@@ -3,7 +3,7 @@ Run the interpreter from the command line.
 """
 
 import sys
-import absyntax, parser
+import interpreter, parser
 
 def main(argv):
     defs = []
@@ -15,7 +15,7 @@ def main(argv):
         except parser.Unparsable as e:
             syntax_error(e, filename)
             return 1
-    absyntax.run(defs)
+    interpreter.run(defs)
     return 0
 
 def syntax_error(e, filename):

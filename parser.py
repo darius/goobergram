@@ -7,7 +7,7 @@ which is copyright by Mark Jason Dominus.
 """
 
 from parson import Grammar, Unparsable
-import absyntax
+import interpreter
 
 grammar = Grammar(r"""
 program: _ (definition | declaration)* ('__END__' | !/./).
@@ -59,5 +59,5 @@ __       = /\b/_.   # (i.e. a keyword must match up to a word boundary)
 
 _        = /\s*/.
 """)
-parser = grammar(**absyntax.__dict__)
+parser = grammar(**interpreter.__dict__)
 parse = parser.program
