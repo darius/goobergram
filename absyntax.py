@@ -12,8 +12,7 @@ def run(program):
     env = Environment(types, None)
     main = Definition('<program>', None, program)
     inst = main.instantiate(env)
-    for part in inst.get_parts():
-        part.draw(env)
+    inst.draw(env)
 
 
 class Environment(Struct('types inst')):
@@ -70,9 +69,15 @@ class Definition(Struct('id extends decls')):
     def draw(self, env):
         supe = self.super_definition(env)
         if supe:
-            supe.draw(env) # XXX does the user always want this?
-        for decl in self.decls:
-            decl.draw(env)
+            supe.draw(env)
+        if any(isinstance(decl, Draw) for decl in self.decls):
+            for decl in self.decls:
+                decl.draw(env)
+        else:
+            # By default, draw all the parts.
+            # XXX skip if supe.draw() found any drawable?
+            for part in env.inst.get_parts():
+                part.draw(env)
     def super_definition(self, env):
         if self.extends:
             supertype = env.types[self.extends]
