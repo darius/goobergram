@@ -11,7 +11,7 @@ def run(program):
     types = {'number': NumberType()}
     env = Environment(types, None)
     main = Definition('<program>', None, program)
-    inst = main.instantiate(env, ())
+    inst = main.instantiate(env)
     for part in inst.get_parts():
         part.draw(env)
 
@@ -28,8 +28,7 @@ class Environment(Struct('types inst')):
         return self.inst.mapping[id]
 
 class NumberType(object):
-    def instantiate(self, env, params):
-        assert not params
+    def instantiate(self, env):
         return NumberInstance()
 
 class NumberInstance(LC.Number):
@@ -46,13 +45,10 @@ class Instance(LC.Compound):
         return '<instance of %r: %r>' % (self.type, sorted(self.keys()))
 
 class TupleType(Struct('fields')):
-    def instantiate(self, env, params):
+    def instantiate(self, env):
         inst = Instance(self)
         for f in self.fields:
             inst.mapping[f] = NumberInstance()
-        subenv = env.spawn(inst)
-        for f, expr in params:
-            LC.equate(inst.mapping[f], expr.evaluate(subenv))
         return inst
     def draw(self, env):
         pass
@@ -60,12 +56,10 @@ class TupleType(Struct('fields')):
 class Definition(Struct('id extends decls')):
     def build(self, env):
         env.types[self.id] = self
-    def instantiate(self, env, params):
+    def instantiate(self, env):
         inst = Instance(self)
         subenv = env.spawn(inst) # XXX won't see global vars
         self.populate(subenv)
-        for id, expr in params:
-            assert False, 'XXX'
         return inst
     def populate(self, env):
         supe = self.super_definition(env)
@@ -93,7 +87,10 @@ class VarDecl(Struct('type_id decls')):
     def build(self, env):
         type_ = env.types[self.type_id]
         for decl in self.decls:
-            env.init(decl.id, type_.instantiate(env, decl.params))
+            inst = type_.instantiate(env)
+            env.init(decl.id, inst)
+            for id, expr in decl.params:
+                LC.equate(inst.mapping[id], rhs.evaluate(env))
     def draw(self, env):
         pass
 
@@ -147,9 +144,11 @@ def Negate(expr):
 
 class Tuple(Struct('exprs')):
     def evaluate(self, env):
-        assert len(self.exprs) in tuple_types
-        params = zip('xyz', self.exprs)
-        return tuple_types[len(self.exprs)].instantiate(env, params)
+        type_ = tuple_types[len(self.exprs)]
+        inst = type_.instantiate(env)
+        for v, expr in zip(type_.fields, self.exprs):
+            LC.equate(inst.mapping[v], expr.evaluate(env))
+        return inst
 
 tuple_types = {
     2: TupleType('xy'),
