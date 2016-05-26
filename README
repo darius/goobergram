@@ -29,3 +29,6 @@ There's now a parser and interpreter for Linogram source files
 
   * The full Linogram does more; I aimed to redo just the book
     version.
+
+The grammar is derived from Dominus's. It uses
+https://github.com/darius/parson
