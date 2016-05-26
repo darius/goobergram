@@ -56,8 +56,6 @@ class TupleType(Struct('fields')):
         return inst
     def draw(self, env):
         pass
-    def __repr__(self):
-        return '<tuple-type %s>' % ','.join(self.fields)
 
 class Definition(Struct('id extends decls')):
     def build(self, env):
