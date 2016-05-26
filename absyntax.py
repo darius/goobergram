@@ -36,6 +36,15 @@ class NumberInstance(LC.Number):
     def draw(self, env):
         pass
 
+class Instance(LC.Compound):
+    def __init__(self, type_):
+        LC.Compound.__init__(self, {})
+        self.type = type_
+    def draw(self, env):
+        self.type.draw(env.spawn(self))
+    def __repr__(self):
+        return '<instance of %r: %r>' % (self.type, sorted(self.keys()))
+
 class TupleType(Struct('fields')):
     def instantiate(self, env, params):
         inst = Instance(self)
@@ -49,16 +58,6 @@ class TupleType(Struct('fields')):
         pass
     def __repr__(self):
         return '<tuple-type %s>' % ','.join(self.fields)
-
-class Instance(LC.Compound):
-    def __init__(self, type_):
-        LC.Compound.__init__(self, {})
-        self.type = type_
-    def draw(self, env):
-        self.type.draw(env.spawn(self))
-    def __repr__(self):
-        return '<instance of %r: %r>' % (self.type, sorted(self.keys()))
-
 
 class Definition(Struct('id extends decls')):
     def build(self, env):
