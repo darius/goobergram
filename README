@@ -1,4 +1,4 @@
-I wanted to play with Mark-Jason Dominus's marvelous linogram program
+I wanted to play with Mark Jason Dominus's marvelous linogram program
 from his book _Higher-Order Perl_:
 http://hop.perl.plover.com/linogram/
 
@@ -10,3 +10,22 @@ compound objects as Python objects you can use directly.
 (The name was picked at random -- since this isn't exactly MJD's
 program. Might be better renamed descriptively like py_linogram_core,
 supposing it works out.)
+
+
+## Update
+
+There's now a parser and interpreter for Linogram source files
+(minilinogram.py). It's incomplete:
+
+  * In one of the first test cases one of the variables did not get
+    pinned down that should've been.
+
+  * Expect other bugs.
+
+  * Equality and arithmetic implicitly mapping over all fields of a
+    figure doesn't work the same way. My version is simplistic.
+
+  * I haven't made up a mechanism to replace the Perl-code drawables.
+
+  * The full Linogram does more; I aimed to redo just the book
+    version.
