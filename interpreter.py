@@ -67,17 +67,15 @@ class Definition(Struct('id extends decls')):
         for decl in self.decls:
             decl.build(env)
     def draw(self, env):
-        if any(isinstance(decl, Draw) for decl in self.decls):
-            for decl in self.decls:
-                decl.draw(env)
-        else:
-            supe = self.super_definition(env)
-            if supe:
-                supe.draw(env)
-            else:
-                # By default, draw all the parts.
-                for part in env.inst.get_parts():
-                    part.draw(env)
+        for drawer in self.pick_drawers(env) or env.inst.get_parts():
+            drawer.draw(env)
+    def pick_drawers(self, env):
+        defn = self
+        while defn:
+            decls = [decl for decl in defn.decls if isinstance(decl, Draw)]
+            if decls: return decls
+            defn = defn.super_definition(env)
+        return []
     def super_definition(self, env):
         if self.extends:
             supertype = env.types[self.extends]
