@@ -43,7 +43,8 @@ def zero(value):
 def as_expression(value):
     if isinstance(value, (int, float)):
         return Number(linear_equations.LinExp(value, ()))
-    return value.as_expression()
+    assert isinstance(value, Expression)
+    return value
 
 def as_scalar(value):
     if isinstance(value, (int, float)):
@@ -53,8 +54,6 @@ def as_scalar(value):
 class Expression(object):
     def as_constraints(self):
         abstract
-    def as_expression(self):
-        return self
     def as_scalar(self):
         abstract
     def coerce(self, value):
@@ -85,8 +84,6 @@ class Number(Expression):
         self.lin_exp = lin_exp
     def as_constraints(self):
         return [Constraint(self.lin_exp)]
-    def as_expression(self):
-        return self
     def as_scalar(self):
         assert self.lin_exp.is_constant()
         return self.lin_exp.constant
@@ -110,8 +107,6 @@ class Compound(Expression):
         self.mapping.update(dict)
     def as_constraints(self):
         return flatten(e.as_constraints() for e in self.mapping.values())
-    def as_expression(self):
-        return self
     def as_scalar(self):
         assert False
     def coerce(self, value):

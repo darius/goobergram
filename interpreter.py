@@ -57,7 +57,7 @@ class Definition(Struct('id extends decls')):
         env.types[self.id] = self
     def instantiate(self, env):
         inst = Instance(self)
-        subenv = env.spawn(inst) # XXX won't see global vars
+        subenv = env.spawn(inst) # XXX won't see global vars; should it?
         self.populate(subenv)
         return inst
     def populate(self, env):
