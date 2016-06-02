@@ -67,20 +67,17 @@ class Definition(Struct('id extends decls')):
         for decl in self.decls:
             decl.build(env)
     def draw(self, env):
-        supe = self.super_definition(env)
-        if supe:
-            # XXX this is wrong: in HOP there's a 
-            # `diamond extends box` example, not meant to
-            # draw the box.
-            supe.draw(env)
         if any(isinstance(decl, Draw) for decl in self.decls):
             for decl in self.decls:
                 decl.draw(env)
         else:
-            # By default, draw all the parts.
-            # XXX skip if supe.draw() found any drawable?
-            for part in env.inst.get_parts():
-                part.draw(env)
+            supe = self.super_definition(env)
+            if supe:
+                supe.draw(env)
+            else:
+                # By default, draw all the parts.
+                for part in env.inst.get_parts():
+                    part.draw(env)
     def super_definition(self, env):
         if self.extends:
             supertype = env.types[self.extends]
