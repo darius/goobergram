@@ -18,12 +18,16 @@ There's now a parser and interpreter for Linogram source files
 (minilinogram.py). It's incomplete:
 
   * In one of the first test cases one of the variables did not get
-    pinned down that should've been.
+    pinned down that should've been. (I'm guessing this is from
+    making decisions from floating-point equality; they should
+    probably be approximate comparisons. Does Linogram have to
+    deal with this too?)
 
   * Expect other bugs.
 
-  * Equality and arithmetic implicitly mapping over all fields of a
-    figure doesn't work the same way. My version is simplistic.
+  * Tuple arithmetic like `figure + (2,3)` works only for points;
+    I haven't implemented the auto-mapping over all fields in
+    `figure` that end with `.x` or `.y`.
 
   * I haven't made up a mechanism to replace the Perl-code drawables.
 
