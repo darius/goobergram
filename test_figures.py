@@ -123,6 +123,11 @@ l2.start.x ^ 1
 l2.draw()
 
 print
+l3 = Line()
+l3 ^ l1 + l2
+l3.draw()
+
+print
 lb = LabelBox('Aloha')
 lb.top ^ l2
 lb.ht ^ 100
@@ -133,6 +138,9 @@ lb.draw()
 #. // undetermined Line
 #. ctx.moveTo(1, 42)
 #. ctx.lineTo(11, 42)
+#. 
+#. ctx.moveTo(4, 46)
+#. ctx.lineTo(16, 56)
 #. 
 #. ctx.moveTo(1, 142)
 #. ctx.lineTo(11, 142)

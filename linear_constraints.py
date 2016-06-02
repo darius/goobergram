@@ -4,15 +4,15 @@ We represent the constraint as a linear expression, with the '=0' implicit.
 
 We support compound values, too: they have named fields, and they do
 arithmetic by operating on corresponding field values recursively.  We
-require them all to match; actual Linogram is more lenient.
-(Implementing this leniency would just take intersecting the key-sets,
-I *think*, but I don't feel so solid in my understanding. See
-HOP p. 525.)
+used to require them all to match; now like actual Linogram we make the
+result have only the fields that both have. (HOP p. 525.)
 
-Completely missing: Linogram supports arithmetic between a 'feature'
-(our Expression) and a tuple (an (x,y) or (x,y,z) Compound, effectively).
-This automatically maps down the structure of the feature until it reaches
-fields named like .x or .y. (HOP p. 526)
+Still missing: Linogram supports arithmetic between a 'feature' (our
+Expression) and a tuple (an (x,y) or (x,y,z) Compound, effectively).
+In Linogram this automatically maps down the structure of the feature
+until it reaches fields named like .x or .y. (HOP p. 526) I could add
+a Tuple class and handle it specially, but I think I've learned enough
+that it won't teach me more.
 """
 
 import constraints
@@ -72,8 +72,8 @@ class Expression(object):
     def __sub__(self, value):  return self.combine(1, self.coerce(value), -1)
     def __mul__(self, value):  return self.scale(as_scalar(value))
     def __div__(self, value):  return self.scale(1. / as_scalar(value))
-    def __radd__(self, value): return self.coerce(value) + self
-    def __rsub__(self, value): return self.coerce(value) - self
+    def __radd__(self, value): return self.coerce(value).combine(1, self, 1)
+    def __rsub__(self, value): return self.coerce(value).combine(1, self, -1)
     def __rmul__(self, value): return self.scale(as_scalar(value))
     def __rdiv__(self, value): return self.coerce(value) / self
 
@@ -110,11 +110,14 @@ class Compound(Expression):
     def as_scalar(self):
         assert False
     def coerce(self, value):
-        if isinstance(value, Compound) and self.keys() == value.keys():
-            return value
-        if isinstance(value, dict) and self.keys() == set(value.keys()):
-            return Compound(value)
-        assert False, "Not a Compound: %r" % (value,)
+        if isinstance(value, Compound):
+            mapping = value.mapping
+        elif isinstance(value, dict):
+            mapping = value
+        else:
+            assert False, "Not a Compound: %r" % (value,)
+        return Compound({k: v for k,v in mapping.iteritems()
+                         if k in self.mapping})
     def combine(self, c, e2, c2):
         return Compound({key: (c * self.mapping[key]
                                + c2 * e2.mapping[key])
