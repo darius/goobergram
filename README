@@ -32,3 +32,5 @@ There's now a parser and interpreter for Linogram source files
 
 The grammar is derived from Dominus's. It uses
 https://github.com/darius/parson
+
+linear_equations.py also closely follows the Linogram code.
