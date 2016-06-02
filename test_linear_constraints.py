@@ -6,7 +6,6 @@ import linear_constraints as lc
 
 
 x = lc.Number()
-print 'x', x
 #lc.zero(x)
 lc.zero(x - 3)
 print x.get_value()
