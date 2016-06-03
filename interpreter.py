@@ -121,7 +121,7 @@ class DrawFunction(Struct('fn_name')):
 
 class DrawName(Struct('name')):
     def draw(self, env):
-        self.name.evaluate(env).draw()
+        self.name.evaluate(env).draw(env)
 
 
 class BinaryOp(Struct('arg1 arg2')):
@@ -135,7 +135,7 @@ class Mul(BinaryOp): operate = operator.mul
 class Div(BinaryOp): operate = operator.div
 
 def Negate(expr):
-    return Sub(Number(0), expr)
+    return Mul(Number(-1), expr)
 
 
 class Tuple(Struct('exprs')):
