@@ -92,7 +92,7 @@ class VarDecl(Struct('type_id decls')):
         for decl in self.decls:
             inst = type_.instantiate(env)
             env.init(decl.id, inst)
-            for id, expr in decl.params:
+            for id, rhs in decl.params:
                 LC.equate(inst.mapping[id], rhs.evaluate(env))
     def draw(self, env):
         pass
