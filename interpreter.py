@@ -184,8 +184,8 @@ def coord_str(num):
 def xstr(x): return coord_str(x*xscale)
 def ystr(y): return coord_str(y*yscale)
 
-xscale =  40
-yscale = -40
+xscale = 40
+yscale = 40
 
 def polyline(points):
     print ('<polyline points="%s" fill="transparent" stroke="black" stroke-width="1"/>'
