@@ -162,6 +162,7 @@ class Number(Struct('value')):
     def evaluate(self, env):
         return self.value
 
+
 # XXX just for the smoke test:
 
 def draw_foo(a, b):     
@@ -171,8 +172,24 @@ def draw_point(x, y):
     print 'draw point', x.get_value(), y.get_value()
 
 def draw_line(start, end, **kwargs):
-    print 'draw line', ((start.x.get_value(), start.y.get_value()),
-                        (end.x.get_value(),   end.y.get_value()))
+    polyline([(start.x.get_value(), start.y.get_value()),
+              (end.x.get_value(),   end.y.get_value())])
+
+def coord_str(num):
+    s = '%g' % round(num, 1)
+    # Sometimes we get varying '-0' or '0' from run to run. Hide the
+    # variation:
+    return '0' if s == '-0' else s
+
+def xstr(x): return coord_str(x*xscale)
+def ystr(y): return coord_str(y*yscale)
+
+xscale =  40
+yscale = -40
+
+def polyline(points):
+    print ('<polyline points="%s" fill="transparent" stroke="black" stroke-width="1"/>'
+           % ', '.join('%s %s' % (xstr(x), ystr(y)) for x,y in points))
 
 draw_functions = dict(draw_foo=draw_foo,
                       draw_point=draw_point,
