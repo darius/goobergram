@@ -10,7 +10,7 @@ from parson import Grammar, Unparsable
 import interpreter
 
 grammar = Grammar(r"""
-program: _ (definition | declaration)* ('__END__' | !/./).
+program: _ (definition | declaration)* ('__END__' | :end).
 
 definition: defheader '{'_ [declaration* :hug] '}'_   :Definition.
 defheader: 'define'__ ID ['extends'__ ID | :None].
