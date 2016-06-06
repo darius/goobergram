@@ -59,5 +59,5 @@ __       = /\b/_.   # (i.e. a keyword must match up to a word boundary)
 
 _        = /\s*/.
 """)
-parser = grammar(**interpreter.__dict__)
+parser = grammar.bind(interpreter)
 parse = parser.program
