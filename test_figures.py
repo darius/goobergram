@@ -32,7 +32,7 @@ class Label(Point):
                for v in [self.x, self.y]):
             print '// undetermined Label'
         else:
-            print 'ctx.fillText(%r, %g, %g' % (self.text,
+            print 'ctx.fillText(%r, %g, %g)' % (self.text,
                                                self.x.get_value(),
                                                self.y.get_value())
 
@@ -148,6 +148,6 @@ lb.draw()
 #. ctx.lineTo(11, 42)
 #. ctx.moveTo(11, 42)
 #. ctx.lineTo(11, 142)
-#. ctx.fillText('Aloha', 6, 92
+#. ctx.fillText('Aloha', 6, 92)
 #. ctx.moveTo(1, 42)
 #. ctx.lineTo(1, 142)
