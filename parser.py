@@ -9,52 +9,50 @@ which is copyright by Mark Jason Dominus.
 from parson import Grammar, Unparsable
 import interpreter
 
-grammar = Grammar(r""" _ (definition | declaration)* ('__END__' | :end).
+grammar = Grammar(r""" (definition | declaration)* ('__END__' | :end).
 
-definition: defheader '{'_ [declaration* :hug] '}'_   :Definition.
-defheader: 'define'__ ID ['extends'__ ID | :None].
+definition: defheader '{' [declaration* :hug] '}'   :Definition.
+defheader: "define" ID ["extends" ID | :None].
 
-declaration: ID declarators ';'_   :VarDecl
+declaration: ID declarators ';'   :VarDecl
            | constraint_section
            | draw_section.
 
-declarators: declarator ++ (','_)   :hug.
-declarator: ID [('('_ params ')'_)? :hug]   :Declarator.
-params:     param_spec ++ (','_).
-param_spec: ID '='_ expression   :hug.
+declarators: declarator++','   :hug.
+declarator: ID [('(' param_spec++',' ')')? :hug]   :Declarator.
+param_spec: ID '=' expression   :hug.
 
-constraint_section: 'constraints'__ '{'_ constraint* '}'_   :hug :Constraints.
-constraint: expression '='_ expression ';'_ :hug.
+constraint_section: "constraints" '{' constraint* '}'   :hug :Constraints.
+constraint: expression '=' expression ';' :hug.
 
-draw_section: 'draw'__ '{'_ drawable* '}'_   :hug :Draw.
-drawable: name ';'_      :DrawName
-        | '&'_ ID ';'_   :DrawFunction.
+draw_section: "draw" '{' drawable* '}'   :hug :Draw.
+drawable: name ';'     :DrawName
+        | '&' ID ';'   :DrawFunction.
 
-expression: term ('+'_ term :Add
-                 |'-'_ term :Sub)*.
-term:       atom ('*'_ atom :Mul
-                 |'/'_ atom :Div)*.
+expression: term ('+' term :Add
+                 |'-' term :Sub)*.
+term:       atom ('*' atom :Mul
+                 |'/' atom :Div)*.
 
 atom: name
     | tuple
-    | NUMBER            :Number
-    | '-'_ expression   :Negate
-    | '('_ expression ')'_.
+    | NUMBER           :Number
+    | '-' expression   :Negate
+    | '(' expression ')'.
 
-name: ID :Name ('.'_ ID :Dot)*.
+name: ID :Name ('.' ID :Dot)*.
 
-tuple: '('_ expression (','_ expression)+ ')'_   :hug :Tuple.
+tuple: '(' expression (',' expression)+ ')'   :hug :Tuple.
 
 
 # Lexical grammar
 
-NUMBER:    { mantissa /[eE]\d+/? } _  :float.
-mantissa:  /\d+/ ('.' /\d*/)?
-         | '.' /\d+/.
+ID:          /([a-zA-Z_]\w*)/.   # XXX need to rule out keywords?
 
-ID:        /([a-zA-Z_]\w*)/ _.   # XXX need to rule out keywords?
+NUMBER   ~:  { mantissa /[eE]\d+/? } FNORD  :float.
+mantissa ~:  /\d+/ ('.' /\d*/)?
+           | '.' /\d+/.
 
-__:        /\b/_.   # (i.e. a keyword must match up to a word boundary)
-_:         /\s*/.
+FNORD    ~:  /\s*/.
 """)
 parse = grammar.bind(interpreter)
