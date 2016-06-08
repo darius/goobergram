@@ -20,7 +20,7 @@ declaration: ID declarators ';'_   :VarDecl
 
 declarators: declarator ++ (','_)   :hug.
 declarator: ID [('('_ params ')'_)? :hug]   :Declarator.
-params = param_spec ++ (','_).
+params:     param_spec ++ (','_).
 param_spec: ID '='_ expression   :hug.
 
 constraint_section: 'constraints'__ '{'_ constraint* '}'_   :hug :Constraints.
@@ -49,13 +49,12 @@ tuple: '('_ expression (','_ expression)+ ')'_   :hug :Tuple.
 # Lexical grammar
 
 NUMBER:    { mantissa /[eE]\d+/? } _  :float.
-mantissa = /\d+/ ('.' /\d*/)?
+mantissa:  /\d+/ ('.' /\d*/)?
          | '.' /\d+/.
 
-ID       = /([a-zA-Z_]\w*)/ _.   # XXX need to rule out keywords?
+ID:        /([a-zA-Z_]\w*)/ _.   # XXX need to rule out keywords?
 
-__       = /\b/_.   # (i.e. a keyword must match up to a word boundary)
-
-_        = /\s*/.
+__:        /\b/_.   # (i.e. a keyword must match up to a word boundary)
+_:         /\s*/.
 """)
 parse = grammar.bind(interpreter)
