@@ -9,8 +9,7 @@ which is copyright by Mark Jason Dominus.
 from parson import Grammar, Unparsable
 import interpreter
 
-grammar = Grammar(r"""
-program: _ (definition | declaration)* ('__END__' | :end).
+grammar = Grammar(r""" _ (definition | declaration)* ('__END__' | :end).
 
 definition: defheader '{'_ [declaration* :hug] '}'_   :Definition.
 defheader: 'define'__ ID ['extends'__ ID | :None].
@@ -19,9 +18,9 @@ declaration: ID declarators ';'_   :VarDecl
            | constraint_section
            | draw_section.
 
-declarators: declarator (','_ declarator)*   :hug.
+declarators: declarator ++ (','_)   :hug.
 declarator: ID [('('_ params ')'_)? :hug]   :Declarator.
-params = param_spec (','_ param_spec)*.
+params = param_spec ++ (','_).
 param_spec: ID '='_ expression   :hug.
 
 constraint_section: 'constraints'__ '{'_ constraint* '}'_   :hug :Constraints.
@@ -59,5 +58,4 @@ __       = /\b/_.   # (i.e. a keyword must match up to a word boundary)
 
 _        = /\s*/.
 """)
-parser = grammar.bind(interpreter)
-parse = parser.program
+parse = grammar.bind(interpreter)
