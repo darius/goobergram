@@ -12,7 +12,7 @@ import interpreter
 grammar = Grammar(r""" (definition | declaration)* ('__END__' | :end).
 
 definition: defheader '{' [declaration* :hug] '}'   :Definition.
-defheader: "define" ID ["extends" ID | :None].
+defheader: "define" ID ("extends" ID | :None).
 
 declaration: ID declarators ';'   :VarDecl
            | constraint_section
